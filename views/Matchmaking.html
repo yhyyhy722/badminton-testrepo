@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Matchmaking</title>
+	<link rel="stylesheet" href="styles/main.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<div class="container-fluid">
+			<div class="d-flex align-items-center">
+				<a class="navbar-brand" href="#">
+					<img class="logo" src="images/badminton.png">
+				</a>
+			</div>
+			<div class="d-flex align-items-center">
+				<img class="avatar" src="https://www.uifaces.co/wp-content/themes/uifaces-theme/src/img/home-animation/avatar-4.svg">
+				<span class="text-white mx-2">Sigma</span>
+			</div>
+		</div>
+	</nav>
+	<main class="content">
+		<div class="sidebar">
+			<ul class="list">
+				<li class="list-item"><a href="Ranking.html">Ranking</a></li>
+				<li class="list-item active"><a href="./Matchmaking.html">Matchmaking</a></li>
+				<li class="list-item"><a href="GameHistory.html">Game History</a></li>
+			</ul>
+		</div>
+		<div class="right p-3">
+			<div class="text-center">
+				<button type="button" class="btn btn-primary" id="start_match">Start Match</button>
+			</div>
+			<div id="match_result" class="container text-center mt-5 mb-5">
+				<div class="row">
+					<div class="col-5">
+						<div class="person-card">
+							<img src="https://www.uifaces.co/wp-content/themes/uifaces-theme/src/img/home-animation/avatar-4.svg">
+							<span class="name" id="my_name">Sigma</span>
+						</div>
+					</div>
+					<div class="col">
+						<div class="vs">
+							<div class="vs-text">VS</div>
+							<div class="date" id="game_date">2022-10-19</div>
+							<div class="time" id="game_time">14:00 PM</div>
+							<div class="address" id="game_address">Badminton Stadium</div>
+						</div>
+					</div>
+					<div class="col-5">
+						<div class="person-card">
+							<img src="https://www.uifaces.co/wp-content/themes/uifaces-theme/src/img/home-animation/avatar-3.svg">
+							<span class="name" id="opponent_name"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="text-center">
+				<button id="game_over" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Game Over</button>
+			</div>
+			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1 class="modal-title fs-5" id="exampleModalLabel">Game Results</h1>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div class="mb-3">
+								<label for="my_score" class="form-label">My Score</label>
+								<input type="text" class="form-control" id="my_score">
+							</div>
+							<div class="mb-3">
+								<label for="adversary_score" class="form-label">Adversary Score</label>
+								<input type="text" class="form-control" id="adversary_score">
+							</div>
+							<div class="alert alert-danger" role="alert" id="score_result">
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel">Cancel</button>
+							<button type="button" class="btn btn-primary" id="confirm">Confirm</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+	<script src="./js/matchmaking.js"></script>
+</body>
+</html>

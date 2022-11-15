@@ -1,0 +1,154 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+a {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    /*margin-top: -5%;*/
+    background-color: aliceblue;
+}
+
+.card {
+    padding: 20px;
+}
+
+.form-wrapper .title {
+   text-align: center;
+    margin-bottom: 15px;
+}
+
+.logo {
+    width: 50px;
+}
+
+.avatar {
+    width: 40px;
+    border-radius: 50%;
+}
+
+.level-card {
+    width: 200px;
+    height: 200px;
+    font-size: 25px;
+    line-height: 200px;
+    text-align: center;
+    margin: 0 auto;
+    border: 1px solid #333;
+    border-radius: 200px;
+    cursor: pointer;
+}
+
+.level-card:hover {
+    background-color: aliceblue;
+}
+
+main > .title {
+    text-align: center;
+    margin: 100px 0;
+}
+
+main.content {
+    display: flex;
+    height: calc(100% - 76px);
+}
+
+main .right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+main .sidebar {
+    width: 250px;
+    border-right: 1px solid #e1e1e1;
+}
+
+.sidebar .list {
+    height: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar .list-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e1e1e1;
+    cursor: pointer;
+}
+
+.sidebar .list-item:hover,
+.sidebar .list-item.active {
+    color: #0d6efd;
+    background-color: aliceblue;
+}
+
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.person-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+    border: 2px solid #e1e1e1;
+    padding: 20px;
+}
+
+.person-card img {
+    width: 200px;
+}
+
+.person-card .name {
+    margin-top: 30px;
+    margin-bottom: 80px;
+    font-size: 30px;
+}
+
+.vs {
+    display: flex;
+    flex-direction: column;
+}
+
+.vs .vs-text {
+    color: #0d6efd;
+    font-size: 80px;
+    font-weight: bold;
+}
+
+.vs .date {
+    margin-top: 20px;
+}
+
+.vs .address {
+    margin-top: 50px;
+    font-weight: bold;
+}
+
+#match_result {
+    display: none;
+}
+
+#game_over {
+    display: none;
+}
+
+#score_result {
+    display: none;
+}
