@@ -43,7 +43,7 @@ app.post('/signup', async (req, res) => {
 		return res.json({ message: 'Email has been registered.' })
 	}
 
-	const randomIndex = Math.floor(Math.random() * 9);
+	const randomIndex = Math.floor(Math.random() * defaultAvatarUrls.length);
 
 	const result = await db.collection('users').insertOne({
 		email,
@@ -118,7 +118,7 @@ app.post('/matching', async (req, res) => {
 	// TODO Update algorithm to match best competitor
 	const matchedOpponent = await db.collection('users').findOne({ level, email: {$ne : email} });
 
-	const randomIndex = Math.floor(Math.random() * 9);
+	const randomIndex = Math.floor(Math.random() * defaultAddress.length);
 	const today = new Date()
 	const tomorrow = new Date(today)
 	tomorrow.setDate(tomorrow.getDate() + 1);
@@ -172,6 +172,14 @@ app.post('/updateScore', async (req, res) => {
 				await db.collection('games').updateOne(
 					{ _id: matchedGame._id },
 					{ $set: { status: 'over' } },
+					{ upsert: true }
+				);
+				// update user score
+				const userId = matchedGame.userScore > matchedGame.opponentScore ? matchedGame.user._id : matchedGame.opponent._id;
+				const user = await db.collection('users').findOne({ _id: ObjectId(userId) });
+				await db.collection('users').updateOne(
+					{ _id: ObjectId(userId) },
+					{ $set: { score: user.score + 60 } },
 					{ upsert: true }
 				);
 				res.json(matchedGame);
