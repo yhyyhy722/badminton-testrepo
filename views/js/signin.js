@@ -28,9 +28,14 @@ signin.addEventListener('click', function() {
 				if (res.message) {
 					alert(res.message);
 				} else {
+					console.log(res);
 					localStorage.setItem('user', JSON.stringify(res));
-					alert('Sign in successful!')
-					location.href = './Home.html';
+					alert('Sign in successful!');
+					if (res.level) {
+						location.href = './ranking.html';
+					} else {
+						location.href = './Home.html';
+					}
 				}
 			});
 	}

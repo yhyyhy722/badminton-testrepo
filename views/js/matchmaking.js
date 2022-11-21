@@ -1,5 +1,7 @@
 const myName = document.getElementById('my_name');
 const opponentName = document.getElementById('opponent_name');
+const myAvatar = document.getElementById('my_avatar');
+const opponentAvatar = document.getElementById('opponent_avatar');
 const gameDate = document.getElementById('game_date');
 const gameTime = document.getElementById('game_time');
 const gameAddress = document.getElementById('game_address');
@@ -8,9 +10,6 @@ const gameOver = document.getElementById('game_over');
 const startMatch = document.getElementById('start_match');
 const confirm = document.getElementById('confirm');
 const cancel = document.getElementById('cancel');
-
-let user = localStorage.getItem('user');
-user = JSON.parse(user);
 
 let gameId;
 
@@ -25,15 +24,7 @@ startMatch.addEventListener('click', function() {
 		})
 	}).then(res => res.json())
 		.then((res) => {
-			myName.textContent = user.name;
-			opponentName.textContent = res.opponent.name;
-			const date = new Date(res.gameTime);
-			gameDate.textContent = date.toLocaleDateString();
-			gameTime.textContent = date.toLocaleTimeString();
-			gameAddress.textContent = res.address
-			matchResult.style.display = 'block';
-			gameOver.style.display = 'inline-block';
-			gameId = res.id;
+			setGame(res);
 		});
 });
 
@@ -70,3 +61,36 @@ confirm.addEventListener('click', function() {
 			}
 		});
 });
+
+fetch('/matching?email=' + user.email)
+	.then(res => res.json())
+	.then((res) => {
+		if (res) {
+			setGame(res);
+		}
+	});
+
+
+function setGame(data) {
+	startMatch.style.display = 'none';
+	myName.textContent = user.name;
+	myAvatar.src = user.avatar;
+	if (data.user.email === user.email) {
+		opponentName.textContent = data.opponent.name;
+		opponentAvatar.src = data.opponent.avatar;
+	} else {
+		opponentName.textContent = data.user.name;
+		opponentAvatar.src = data.user.avatar;
+	}
+	const date = new Date(data.gameTime);
+	gameDate.textContent = date.toLocaleDateString();
+	gameTime.textContent = date.toLocaleTimeString();
+	gameAddress.textContent = data.address
+	matchResult.style.display = 'block';
+	gameId = data._id;
+	if (new Date > date) {
+		gameOver.style.display = 'inline-block'
+	} else {
+		gameOver.style.display = 'none';
+	}
+}

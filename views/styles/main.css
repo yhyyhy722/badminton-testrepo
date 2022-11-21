@@ -101,6 +101,10 @@ main .sidebar {
     border-bottom: 1px solid #e1e1e1;
 }
 
+.ranking-item.active {
+    background-color: #e9f2ff;
+}
+
 .person-card {
     display: flex;
     flex-direction: column;

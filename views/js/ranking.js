@@ -6,6 +6,9 @@ fetch('/ranking')
 	for (let i = 0; i < res.length; i++) {
 		const rankingItem = document.createElement('div');
 		rankingItem.classList.add('ranking-item');
+		if (user._id === res[i]._id) {
+			rankingItem.classList.add('active');
+		}
 
 		let medal = '';
 		if (i === 0) {
