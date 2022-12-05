@@ -32,7 +32,7 @@ signin.addEventListener('click', function() {
 					localStorage.setItem('user', JSON.stringify(res));
 					alert('Sign in successful!');
 					if (res.level) {
-						location.href = './Ranking.html';
+						location.href = './ranking.html';
 					} else {
 						location.href = './Home.html';
 					}

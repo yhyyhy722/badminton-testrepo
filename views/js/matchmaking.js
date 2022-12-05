@@ -42,7 +42,8 @@ confirm.addEventListener('click', function() {
 			gameId: gameId,
 			email: user.email,
 			myScore: Number(myScore.value),
-			opponentScore: Number(adversaryScore.value)
+			opponentScore: Number(adversaryScore.value),
+			userId: user._id
 		})
 	}).then(res => res.json())
 		.then((res) => {
@@ -88,7 +89,8 @@ function setGame(data) {
 	gameAddress.textContent = data.address
 	matchResult.style.display = 'block';
 	gameId = data._id;
-	if (new Date > date) {
+
+	if (new Date > date && (!data.firstInputId || (data.firstInputId && data.firstInputId !== user._id))) {
 		gameOver.style.display = 'inline-block'
 	} else {
 		gameOver.style.display = 'none';

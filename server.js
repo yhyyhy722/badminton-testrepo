@@ -14,6 +14,22 @@ setUpDatabase().then(() => {
 app.use(express.json());
 app.use('/', express.static('views'));
 
+const k = 30; // factor of shifting of rating
+
+function updateUserScore(user, score) {
+	user.score = score;
+	if (score < 300) {
+		user.level = 'low';
+	} else if (score >= 300 && score <600) {
+		user.level = 'intermediate';
+	} else if (score >= 600 && score < 900) {
+		user.level = 'advanced';
+	} else {
+		user.level = 'elite';
+	}
+	return user;
+}
+
 const defaultAvatarUrls = [
 	'https://www.uifaces.co/wp-content/themes/uifaces-theme/src/img/home-animation/avatar-1.svg',
 	'https://www.uifaces.co/wp-content/themes/uifaces-theme/src/img/home-animation/avatar-2.svg',
@@ -115,8 +131,10 @@ app.post('/matching', async (req, res) => {
 	}
 
 	const level = matchedUser.level;
-	// TODO Update algorithm to match best competitor
-	const matchedOpponent = await db.collection('users').findOne({ level, email: {$ne : email} });
+
+	const matchedOpponents = await db.collection('users').find({ level, email: {$ne : email} });
+	const randomOpponentsIndex = Math.floor(Math.random() * matchedOpponents.length);
+	const matchedOpponent = matchedOpponents[randomOpponentsIndex];
 
 	const randomIndex = Math.floor(Math.random() * defaultAddress.length);
 	const today = new Date()
@@ -147,7 +165,7 @@ app.get('/matching', async (req, res) => {
 
 // input score(input score)
 app.post('/updateScore', async (req, res) => {
-	const { gameId, email, myScore, opponentScore } = req.body;
+	const { gameId, email, myScore, opponentScore, userId } = req.body;
 	const matchedGame = await db.collection('games').findOne({ _id: ObjectId(gameId) });
 	if (matchedGame) {
 		if (matchedGame.status === 'preparing') {
@@ -160,31 +178,72 @@ app.post('/updateScore', async (req, res) => {
 			}
 			await db.collection('games').updateOne(
 				{ _id: matchedGame._id },
-				{ $set: { userScore: matchedGame.userScore, opponentScore: matchedGame.opponentScore, status: 'inputting' } },
+				{ $set: { userScore: matchedGame.userScore, opponentScore: matchedGame.opponentScore, firstInputId: userId ,status: 'inputting' } },
 				{ upsert: true }
 			);
 			res.json(matchedGame);
 		} else if (matchedGame.status === 'inputting') {
-			if (
-				(email === matchedGame.user.email && myScore === matchedGame.userScore && opponentScore === matchedGame.opponentScore) ||
-				(email === matchedGame.opponent.email && myScore === matchedGame.opponentScore && opponentScore === matchedGame.userScore)
-			) {
+			if (userId === matchedGame.firstInputId) {
+				if (email === matchedGame.user.email) {
+					matchedGame.userScore = myScore;
+					matchedGame.opponentScore = opponentScore;
+				} else {
+					matchedGame.userScore = opponentScore;
+					matchedGame.opponentScore = myScore;
+				}
 				await db.collection('games').updateOne(
 					{ _id: matchedGame._id },
-					{ $set: { status: 'over' } },
-					{ upsert: true }
-				);
-				// update user score
-				const userId = matchedGame.userScore > matchedGame.opponentScore ? matchedGame.user._id : matchedGame.opponent._id;
-				const user = await db.collection('users').findOne({ _id: ObjectId(userId) });
-				await db.collection('users').updateOne(
-					{ _id: ObjectId(userId) },
-					{ $set: { score: user.score + 60 } },
+					{ $set: { userScore: matchedGame.userScore, opponentScore: matchedGame.opponentScore } },
 					{ upsert: true }
 				);
 				res.json(matchedGame);
 			} else {
-				return res.json({ message: 'The score you entered does not match the opponent\'s' });
+				if (
+					(email === matchedGame.user.email && myScore === matchedGame.userScore && opponentScore === matchedGame.opponentScore) ||
+					(email === matchedGame.opponent.email && myScore === matchedGame.opponentScore && opponentScore === matchedGame.userScore)
+				) {
+					await db.collection('games').updateOne(
+						{ _id: matchedGame._id },
+						{ $set: { status: 'over' } },
+						{ upsert: true }
+					);
+					// update user score, ELO RATING ALGORITHM
+					let winUser;
+					let loseUser;
+					if (matchedGame.userScore > matchedGame.opponentScore) {
+						winUser = matchedGame.user;
+						loseUser = matchedGame.opponent;
+					} else {
+						winUser = matchedGame.opponent;
+						loseUser = matchedGame.user;
+					}
+
+					let r1 = winUser.score;
+					let r2 = loseUser.score;
+					const P1 = r1 / (r1+r2);
+					const P2 = r2 / (r1+r2);
+
+					r1 = r1 + k * (1 - P1);
+					r2 = r2 + k * (0 - P2);
+
+					winUser = updateUserScore(winUser, r1);
+					loseUser = updateUserScore(loseUser, r2);
+
+					await db.collection('users').updateOne(
+						{ _id: winUser._id },
+						{ $set: { score: winUser.score, level: winUser.level } },
+						{ upsert: true }
+					);
+
+					await db.collection('users').updateOne(
+						{ _id: loseUser._id },
+						{ $set: { score: loseUser.score, level: loseUser.level } },
+						{ upsert: true }
+					);
+					res.json(matchedGame);
+				} else {
+					return res.json({ message: 'The score you entered does not match the opponent\'s' });
+				}
 			}
 		}
 	} else {
@@ -200,7 +259,8 @@ app.get('/ranking', async (req, res) => {
 
 // game history list
 app.get('/gameHistory', async (req, res) => {
-	const games = await db.collection('games').find({}).toArray();
+	const { userId } = req.query;
+	const games = await db.collection('games').find({ $or: [ {"user._id": ObjectId(userId)}, {"opponent._id": ObjectId(userId)} ] }).toArray();
 	res.json(games);
 });
 

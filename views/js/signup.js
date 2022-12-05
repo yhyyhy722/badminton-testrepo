@@ -10,6 +10,11 @@ signup.addEventListener('click', function() {
 		return;
 	}
 
+	if (!/^\S+@\S+\.\S+$/.test(email)) {
+		alert('Invalid email format!');
+		return;
+	}
+
 	if (!password) {
 		alert('password required!');
 		return;

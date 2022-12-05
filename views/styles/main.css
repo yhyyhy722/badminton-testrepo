@@ -82,7 +82,6 @@ main .sidebar {
 }
 
 .sidebar .list-item {
-    padding: 12px 16px;
     border-bottom: 1px solid #e1e1e1;
     cursor: pointer;
 }
@@ -91,6 +90,12 @@ main .sidebar {
 .sidebar .list-item.active {
     color: #0d6efd;
     background-color: aliceblue;
+}
+
+.sidebar .list-item a {
+    display: inline-block;
+    padding: 12px 16px;
+    width: 100%;
 }
 
 .ranking-item {
