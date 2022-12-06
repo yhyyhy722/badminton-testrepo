@@ -138,8 +138,8 @@ app.post('/matching', async (req, res) => {
 
 	const randomIndex = Math.floor(Math.random() * defaultAddress.length);
 	const today = new Date()
-	const tomorrow = new Date(today)
-	tomorrow.setDate(tomorrow.getDate() + 1);
+	// const tomorrow = new Date(today)
+	// tomorrow.setDate(tomorrow.getDate() + 1);
 
 	const result = await db.collection('games').insertOne({
 		user: matchedUser,
@@ -148,7 +148,7 @@ app.post('/matching', async (req, res) => {
 		userScore: 0,
 		opponentScore: 0,
 		status: 'preparing',
-		gameTime: tomorrow,
+		gameTime: today,
 		createAt: new Date(),
 	});
 	const game = await db.collection('games').findOne({ _id: ObjectId(result.insertedId) });
