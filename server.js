@@ -132,7 +132,7 @@ app.post('/matching', async (req, res) => {
 
 	const level = matchedUser.level;
 
-	const matchedOpponents = await db.collection('users').find({ level, email: {$ne : email} });
+	const matchedOpponents = await db.collection('users').find({ level, email: {$ne : email} }).toArray();
 	const randomOpponentsIndex = Math.floor(Math.random() * matchedOpponents.length);
 	const matchedOpponent = matchedOpponents[randomOpponentsIndex];
 
