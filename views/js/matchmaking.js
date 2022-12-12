@@ -8,6 +8,7 @@ const gameAddress = document.getElementById('game_address');
 const matchResult = document.getElementById('match_result');
 const gameOver = document.getElementById('game_over');
 const startMatch = document.getElementById('start_match');
+const emptyImg = document.getElementById('empty_img');
 const confirm = document.getElementById('confirm');
 const cancel = document.getElementById('cancel');
 
@@ -54,6 +55,7 @@ confirm.addEventListener('click', function() {
 				alert('Success!');
 				cancel.click();
 				startMatch.style.display = 'none';
+				emptyImg.style.display = 'none';
 				gameOver.style.display = 'none';
 				if (res.status === 'over') {
 					matchResult.style.display = 'none';
@@ -74,6 +76,7 @@ fetch('/matching?email=' + user.email)
 
 function setGame(data) {
 	startMatch.style.display = 'none';
+	emptyImg.style.display = 'none';
 	myName.textContent = user.name;
 	myAvatar.src = user.avatar;
 	if (data.user.email === user.email) {

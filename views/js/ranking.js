@@ -24,7 +24,10 @@ fetch('/ranking')
 				<span class="mx-3">${res[i].name}</span>
 				${medal}
 			</div>
-			<div>${res[i].score.toFixed(2)}(${res[i].level})</div>
+			<div class="middle">
+				<div>${res[i].score.toFixed(2)}</div>
+				<div>(${res[i].level})</div>
+			</div>
 			<div>${i+1}</div>
 		`;
 		right.appendChild(rankingItem);

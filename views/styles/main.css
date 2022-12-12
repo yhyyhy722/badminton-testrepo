@@ -16,7 +16,7 @@ a {
     align-items: center;
     height: 100%;
     /*margin-top: -5%;*/
-    background-color: aliceblue;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 .card {
@@ -104,6 +104,24 @@ main .sidebar {
     align-items: center;
     padding: 20px;
     border-bottom: 1px solid #e1e1e1;
+}
+
+.ranking-item > div:first-child {
+    width: 200px;
+}
+
+.ranking-item .middle {
+    display: flex;
+    align-items: center;
+}
+
+.ranking-item .middle > div {
+    width: 100px;
+}
+
+.ranking-item .middle > div:first-child {
+    text-align: right;
+    margin-right: 10px;
 }
 
 .ranking-item.active {
